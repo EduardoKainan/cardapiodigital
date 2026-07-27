@@ -581,8 +581,19 @@
           </div>
         </section>
 
+        <section class="section" id="quantitySection">
+          <h2>2) 🍽️ Quantos macarrões você quer?</h2>
+          <p class="lead">Os combos abaixo têm 10% de desconto em cada pedido do combo.</p>
+          <div class="choice-row" data-single-group="quantity">
+            <div class="pill selected" data-value="1"><label><input type="radio" name="quantity" checked /><span class="title">1 macarrão</span><span class="desc">pedido avulso</span></label></div>
+            <div class="pill" data-value="2"><label><input type="radio" name="quantity" /><span class="title">Combo 2</span><span class="desc">10% de desconto</span></label></div>
+            <div class="pill" data-value="4"><label><input type="radio" name="quantity" /><span class="title">Combo 4</span><span class="desc">10% de desconto</span></label></div>
+            <div class="pill" data-value="6"><label><input type="radio" name="quantity" /><span class="title">Combo 6</span><span class="desc">10% de desconto</span></label></div>
+          </div>
+        </section>
+
         <section class="section">
-          <h2>2) 🍜 Escolha a massa</h2>
+          <h2>4) 🍜 Escolha a massa</h2>
           <p class="lead">Monte seu prato com o tipo de massa que você prefere.</p>
           <div class="choice-row" data-single-group="massa">
             <div class="pill selected" data-value="Penne"><label><input type="radio" name="massa" checked /><span class="title">Penne</span><span class="desc">clássico e versátil</span></label></div>
@@ -593,7 +604,7 @@
         </section>
 
         <section class="section">
-          <h2>3) 🥫 Escolha o molho</h2>
+          <h2>5) 🥫 Escolha o molho</h2>
           <p class="lead">Agora escolha o molho que vai dar o gosto principal do prato.</p>
           <div class="choice-row" data-single-group="molho">
             <div class="pill selected" data-value="Bolonhesa"><label><input type="radio" name="molho" checked /><span class="title">Bolonhesa</span><span class="desc">sabor marcante</span></label></div>
@@ -603,7 +614,7 @@
         </section>
 
         <section class="section">
-          <h2>4) 🥩 Escolha a carne</h2>
+          <h2>6) 🥩 Escolha a carne</h2>
           <p class="lead">Selecione a proteína que combina com o seu pedido.</p>
           <div class="choice-row" data-single-group="carne">
             <div class="pill selected" data-value="Frango Desfiado"><label><input type="radio" name="carne" checked /><span class="title">Frango Desfiado</span><span class="desc">leve e saboroso</span></label></div>
@@ -612,7 +623,7 @@
         </section>
 
         <section class="section" id="ingredientsSection">
-          <h2>5) 🧄 Escolha os ingredientes</h2>
+          <h2>7) 🧄 Escolha os ingredientes</h2>
           <p class="lead">Agora é só adicionar o que você quer no prato.</p>
           <div class="grid-4" id="ingredientsGrid">
             <div class="check" data-value="Azeitona"><label onclick="toggleIngredient('Azeitona')"><input type="checkbox" /><span class="title">Azeitona</span><span class="desc">extra sabor</span></label></div>
@@ -632,7 +643,7 @@
         </section>
 
         <section class="section">
-          <h2>6) 🎁 Bônus grátis</h2>
+          <h2>8) 🎁 Bônus grátis</h2>
           <p class="lead">Pode escolher até 3 finalizações grátis.</p>
           <div class="grid-4" id="bonusGrid">
             <div class="check" data-value="Pimenta Calabresa"><label onclick="toggleBonus('Pimenta Calabresa')"><input type="checkbox" /><span class="title">🌶️ Pimenta</span><span class="desc">calabresa</span></label></div>
@@ -643,7 +654,7 @@
         </section>
 
         <section class="section">
-          <h2>7) 📍 Seus dados de entrega</h2>
+          <h2>9) 📍 Seus dados de entrega</h2>
           <p class="lead">Preencha os dados para entregar sem erro.</p>
           <div class="field-grid">
             <div>
@@ -702,8 +713,16 @@
       'A COMPLETONA — R$ 27,00 (Até 12 ingredientes)': 12,
     };
 
+    const priceMap = {
+      'A CLÁSSICA — R$ 24,00 (Até 08 ingredientes)': 24,
+      'A COMPLETONA — R$ 27,00 (Até 12 ingredientes)': 27,
+    };
+
+    const comboDiscountQuantity = new Set([2, 4, 6]);
+
     const state = {
       package: 'A CLÁSSICA — R$ 24,00 (Até 08 ingredientes)',
+      quantity: 1,
       massa: 'Penne',
       molho: 'Bolonhesa',
       carne: 'Frango Desfiado',
@@ -718,6 +737,38 @@
       qsa(`.choice-row[data-single-group="${groupName}"] .pill`).forEach(p => {
         p.classList.toggle('selected', p.dataset.value === selectedValue);
       });
+    }
+
+    function money(value) {
+      return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    function getUnitPrice() {
+      return priceMap[state.package] || 0;
+    }
+
+    function getComboMultiplier() {
+      return comboDiscountQuantity.has(state.quantity) ? 0.9 : 1;
+    }
+
+    function getTotals() {
+      const unitPrice = getUnitPrice();
+      const subtotal = unitPrice * state.quantity;
+      const total = subtotal * getComboMultiplier();
+      return {
+        unitPrice,
+        subtotal,
+        discount: subtotal - total,
+        total,
+      };
+    }
+
+    function syncQuantity(value) {
+      state.quantity = Number(value);
+      qsa('.choice-row[data-single-group="quantity"] .pill').forEach(p => {
+        p.classList.toggle('selected', p.dataset.value === String(state.quantity));
+      });
+      updateSummary();
     }
 
     function syncPackage(value) {
@@ -797,8 +848,15 @@
 
     function updateSummary() {
       const items = [];
-      const selectedPackage = state.package.includes('CLÁSSICA') ? 'A Clássica — R$ 24,00' : 'A Completona — R$ 27,00';
-      items.push(`<li><b>Pacote:</b> ${selectedPackage}</li>`);
+      const selectedPackage = state.package.includes('CLÁSSICA') ? 'A Clássica' : 'A Completona';
+      const totals = getTotals();
+      const comboLabel = state.quantity === 1 ? 'Avulso' : `Combo ${state.quantity}`;
+
+      items.push(`<li><b>Pacote:</b> ${selectedPackage} • ${money(totals.unitPrice)} cada</li>`);
+      items.push(`<li><b>Quantidade:</b> ${comboLabel}</li>`);
+      items.push(`<li><b>Subtotal:</b> ${money(totals.subtotal)}</li>`);
+      items.push(`<li><b>Desconto combo:</b> ${totals.discount > 0 ? money(totals.discount) + ' (10%)' : 'nenhum'}</li>`);
+      items.push(`<li><b>Total:</b> ${money(totals.total)}</li>`);
       items.push(`<li><b>Massa:</b> ${state.massa}</li>`);
       items.push(`<li><b>Molho:</b> ${state.molho}</li>`);
       items.push(`<li><b>Carne:</b> ${state.carne}</li>`);
@@ -806,6 +864,8 @@
       items.push(`<li><b>Bônus grátis:</b> ${state.bonuses.length ? state.bonuses.join(', ') : 'nenhum selecionado'}</li>`);
       qs('#summaryList').innerHTML = items.join('');
       qs('#bonusCount').textContent = state.bonuses.length;
+      qs('#ingredientCount').textContent = state.ingredients.length;
+      qs('#ingredientLimit').textContent = packageMap[state.package];
       enforceIngredientLimit();
     }
 
@@ -826,13 +886,20 @@
       const phone = qs('#customerPhone').value.trim();
       const address = qs('#deliveryAddress').value.trim();
       const ref = qs('#referencePoint').value.trim();
-      const selectedPackage = state.package.includes('CLÁSSICA') ? 'A Clássica — R$ 24,00' : 'A Completona — R$ 27,00';
+      const selectedPackage = state.package.includes('CLÁSSICA') ? 'A Clássica' : 'A Completona';
+      const totals = getTotals();
+      const comboLabel = state.quantity === 1 ? 'Avulso' : `Combo ${state.quantity}`;
 
       const lines = [
         '*Macarrão da Mary*',
         '',
         '*Pedido*',
         `Pacote: ${selectedPackage}`,
+        `Quantidade: ${comboLabel}`,
+        `Valor unitário: ${money(totals.unitPrice)}`,
+        `Subtotal: ${money(totals.subtotal)}`,
+        `Desconto combo: ${totals.discount > 0 ? money(totals.discount) + ' (10%)' : 'nenhum'}`,
+        `Total: ${money(totals.total)}`,
         `Massa: ${state.massa}`,
         `Molho: ${state.molho}`,
         `Carne: ${state.carne}`,
@@ -883,6 +950,14 @@
       card.addEventListener('click', () => syncPackage(card.dataset.value));
     });
 
+    // Bind quantity
+    qsa('.choice-row[data-single-group="quantity"] .pill').forEach(card => {
+      card.addEventListener('click', () => {
+        syncQuantity(card.dataset.value);
+        hideError();
+      });
+    });
+
     // Bind singles
     ['massa', 'molho', 'carne'].forEach(group => {
       qsa(`.choice-row[data-single-group="${group}"] .pill`).forEach(card => {
@@ -900,6 +975,7 @@
     qs('#whatsBtnMobile').addEventListener('click', openWhatsApp);
     qs('#resetBtn').addEventListener('click', () => {
       state.package = 'A CLÁSSICA — R$ 24,00 (Até 08 ingredientes)';
+      state.quantity = 1;
       state.massa = 'Penne';
       state.molho = 'Bolonhesa';
       state.carne = 'Frango Desfiado';
@@ -910,6 +986,7 @@
       qs('#deliveryAddress').value = '';
       qs('#referencePoint').value = '';
       qsa('[data-group="package"]').forEach(p => p.classList.toggle('selected', p.dataset.value === state.package));
+      syncQuantity(state.quantity);
       syncPills('massa', state.massa);
       syncPills('molho', state.molho);
       syncPills('carne', state.carne);
@@ -922,6 +999,7 @@
 
     // init
     syncPackage(state.package);
+    syncQuantity(state.quantity);
     syncPills('massa', state.massa);
     syncPills('molho', state.molho);
     syncPills('carne', state.carne);

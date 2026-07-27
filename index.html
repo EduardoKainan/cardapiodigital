@@ -613,18 +613,18 @@
           <h2>5) 🧄 Escolha os ingredientes</h2>
           <p class="lead">Agora é só adicionar o que você quer no prato.</p>
           <div class="grid-4" id="ingredientsGrid">
-            <div class="check" data-value="Azeitona"><label><input type="checkbox" /><span class="title">Azeitona</span><span class="desc">extra sabor</span></label></div>
-            <div class="check" data-value="Salsicha"><label><input type="checkbox" /><span class="title">Salsicha</span><span class="desc">popular</span></label></div>
-            <div class="check" data-value="Milho"><label><input type="checkbox" /><span class="title">Milho</span><span class="desc">leve e doce</span></label></div>
-            <div class="check" data-value="Mussarela"><label><input type="checkbox" /><span class="title">Mussarela</span><span class="desc">cremosidade</span></label></div>
-            <div class="check" data-value="Ervilha"><label><input type="checkbox" /><span class="title">Ervilha</span><span class="desc">clássico</span></label></div>
-            <div class="check" data-value="Frango Desfiado"><label><input type="checkbox" /><span class="title">Frango Desfiado</span><span class="desc">mais proteína</span></label></div>
-            <div class="check" data-value="Bacon"><label><input type="checkbox" /><span class="title">Bacon</span><span class="desc">sabor extra</span></label></div>
-            <div class="check" data-value="Calabresa"><label><input type="checkbox" /><span class="title">Calabresa</span><span class="desc">bem temperada</span></label></div>
-            <div class="check" data-value="Uvas Passas"><label><input type="checkbox" /><span class="title">Uvas Passas</span><span class="desc">toque agridoce</span></label></div>
-            <div class="check" data-value="Batata Palha"><label><input type="checkbox" /><span class="title">Batata Palha</span><span class="desc">crocância</span></label></div>
-            <div class="check" data-value="Ovo de Codorna"><label><input type="checkbox" /><span class="title">Ovo de Codorna</span><span class="desc">diferente</span></label></div>
-            <div class="check" data-value="Tomate Cereja"><label><input type="checkbox" /><span class="title">Tomate Cereja</span><span class="desc">fresco</span></label></div>
+            <div class="check" data-value="Azeitona" onclick="toggleIngredient('Azeitona')"><label><input type="checkbox" /><span class="title">Azeitona</span><span class="desc">extra sabor</span></label></div>
+            <div class="check" data-value="Salsicha" onclick="toggleIngredient('Salsicha')"><label><input type="checkbox" /><span class="title">Salsicha</span><span class="desc">popular</span></label></div>
+            <div class="check" data-value="Milho" onclick="toggleIngredient('Milho')"><label><input type="checkbox" /><span class="title">Milho</span><span class="desc">leve e doce</span></label></div>
+            <div class="check" data-value="Mussarela" onclick="toggleIngredient('Mussarela')"><label><input type="checkbox" /><span class="title">Mussarela</span><span class="desc">cremosidade</span></label></div>
+            <div class="check" data-value="Ervilha" onclick="toggleIngredient('Ervilha')"><label><input type="checkbox" /><span class="title">Ervilha</span><span class="desc">clássico</span></label></div>
+            <div class="check" data-value="Frango Desfiado" onclick="toggleIngredient('Frango Desfiado')"><label><input type="checkbox" /><span class="title">Frango Desfiado</span><span class="desc">mais proteína</span></label></div>
+            <div class="check" data-value="Bacon" onclick="toggleIngredient('Bacon')"><label><input type="checkbox" /><span class="title">Bacon</span><span class="desc">sabor extra</span></label></div>
+            <div class="check" data-value="Calabresa" onclick="toggleIngredient('Calabresa')"><label><input type="checkbox" /><span class="title">Calabresa</span><span class="desc">bem temperada</span></label></div>
+            <div class="check" data-value="Uvas Passas" onclick="toggleIngredient('Uvas Passas')"><label><input type="checkbox" /><span class="title">Uvas Passas</span><span class="desc">toque agridoce</span></label></div>
+            <div class="check" data-value="Batata Palha" onclick="toggleIngredient('Batata Palha')"><label><input type="checkbox" /><span class="title">Batata Palha</span><span class="desc">crocância</span></label></div>
+            <div class="check" data-value="Ovo de Codorna" onclick="toggleIngredient('Ovo de Codorna')"><label><input type="checkbox" /><span class="title">Ovo de Codorna</span><span class="desc">diferente</span></label></div>
+            <div class="check" data-value="Tomate Cereja" onclick="toggleIngredient('Tomate Cereja')"><label><input type="checkbox" /><span class="title">Tomate Cereja</span><span class="desc">fresco</span></label></div>
           </div>
           <div class="counter">Selecionados: <strong id="ingredientCount">0</strong> / <strong id="ingredientLimit">8</strong></div>
         </section>
@@ -633,9 +633,9 @@
           <h2>6) 🎁 Bônus grátis</h2>
           <p class="lead">Pode escolher até 3 finalizações grátis.</p>
           <div class="grid-4" id="bonusGrid">
-            <div class="check" data-value="Pimenta Calabresa"><label><input type="checkbox" /><span class="title">🌶️ Pimenta</span><span class="desc">calabresa</span></label></div>
-            <div class="check" data-value="Orégano"><label><input type="checkbox" /><span class="title">🌿 Orégano</span><span class="desc">clássico</span></label></div>
-            <div class="check" data-value="Cebolinha"><label><input type="checkbox" /><span class="title">🌱 Cebolinha</span><span class="desc">fresco</span></label></div>
+            <div class="check" data-value="Pimenta Calabresa" onclick="toggleBonus('Pimenta Calabresa')"><label><input type="checkbox" /><span class="title">🌶️ Pimenta</span><span class="desc">calabresa</span></label></div>
+            <div class="check" data-value="Orégano" onclick="toggleBonus('Orégano')"><label><input type="checkbox" /><span class="title">🌿 Orégano</span><span class="desc">clássico</span></label></div>
+            <div class="check" data-value="Cebolinha" onclick="toggleBonus('Cebolinha')"><label><input type="checkbox" /><span class="title">🌱 Cebolinha</span><span class="desc">fresco</span></label></div>
           </div>
           <div class="counter">Selecionados: <strong id="bonusCount">0</strong> / <strong>3</strong></div>
         </section>
@@ -889,15 +889,6 @@
       });
     });
 
-    // Bind ingredients and bonuses with delegated clicks
-    document.addEventListener('click', (e) => {
-      if (e.target.closest('#ingredientsGrid .check')) {
-        handleChoiceCardClick(e, 'ingredientsGrid', toggleIngredient);
-      }
-      if (e.target.closest('#bonusGrid .check')) {
-        handleChoiceCardClick(e, 'bonusGrid', toggleBonus);
-      }
-    }, true);
 
     qs('#whatsBtn').addEventListener('click', openWhatsApp);
     qs('#whatsBtnMobile').addEventListener('click', openWhatsApp);

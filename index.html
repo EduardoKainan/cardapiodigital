@@ -778,6 +778,13 @@
       updateSummary();
     }
 
+    function handleChoiceCardClick(e, gridId, toggleFn) {
+      const card = e.target.closest(`#${gridId} .check`);
+      if (!card) return;
+      e.preventDefault();
+      toggleFn(card.dataset.value);
+    }
+
     function syncChecklist(gridId, selectedValues) {
       qsa('.check', qs('#' + gridId)).forEach(card => {
         card.classList.toggle('selected', selectedValues.includes(card.dataset.value));
@@ -882,23 +889,15 @@
       });
     });
 
-    // Bind ingredients
-    qsa('#ingredientsGrid .check').forEach(card => {
-      card.addEventListener('click', () => {
-        const input = qs('input', card);
-        if (input.disabled && !input.checked) return;
-        toggleIngredient(card.dataset.value);
-      });
-    });
-
-    // Bind bonuses
-    qsa('#bonusGrid .check').forEach(card => {
-      card.addEventListener('click', () => {
-        const input = qs('input', card);
-        if (input.disabled && !input.checked) return;
-        toggleBonus(card.dataset.value);
-      });
-    });
+    // Bind ingredients and bonuses with delegated clicks
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('#ingredientsGrid .check')) {
+        handleChoiceCardClick(e, 'ingredientsGrid', toggleIngredient);
+      }
+      if (e.target.closest('#bonusGrid .check')) {
+        handleChoiceCardClick(e, 'bonusGrid', toggleBonus);
+      }
+    }, true);
 
     qs('#whatsBtn').addEventListener('click', openWhatsApp);
     qs('#whatsBtnMobile').addEventListener('click', openWhatsApp);

@@ -117,7 +117,7 @@
       position: relative;
       z-index: 1;
       display: grid;
-      grid-template-columns: minmax(0, 1.3fr) minmax(180px, .9fr);
+      grid-template-columns: minmax(0, 1.25fr) minmax(260px, .95fr);
       gap: 18px;
       align-items: center;
     }
@@ -155,61 +155,41 @@
       background: linear-gradient(180deg, rgba(255,255,255,.84), rgba(255,248,243,.96));
       border: 1px solid rgba(228,87,46,.16);
       border-radius: 24px;
-      padding: 18px;
+      padding: 0;
       box-shadow: 0 18px 30px rgba(56, 23, 15, 0.06);
       position: relative;
       overflow: hidden;
+      min-height: 320px;
     }
 
     .cover-card::before {
       content: "";
       position: absolute;
-      inset: auto -28px -28px auto;
-      width: 120px;
-      height: 120px;
-      border-radius: 40px;
-      background: radial-gradient(circle at 30% 30%, rgba(228,87,46,.16), rgba(228,87,46,0) 64%);
-      transform: rotate(18deg);
-    }
-
-    .cover-bowl {
-      height: 130px;
-      border-radius: 24px;
+      inset: 0;
       background:
-        radial-gradient(circle at 50% 28%, rgba(255,255,255,.95), rgba(255,255,255,.62) 36%, rgba(255,255,255,0) 37%),
-        radial-gradient(circle at 50% 60%, rgba(228,87,46,.16), rgba(228,87,46,.06) 35%, rgba(45,106,79,.08) 57%, rgba(0,0,0,0) 58%),
-        linear-gradient(180deg, #fff 0%, #ffece0 100%);
-      border: 1px solid rgba(228,87,46,.14);
-      position: relative;
-      margin-bottom: 12px;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
+        linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(35, 17, 11, .28) 100%),
+        linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,0) 45%);
+      z-index: 1;
+      pointer-events: none;
     }
 
-    .cover-bowl::before,
-    .cover-bowl::after {
-      content: "";
+    .cover-image {
+      width: 100%;
+      height: 100%;
+      min-height: 320px;
+      object-fit: cover;
+      display: block;
+      filter: saturate(1.02) contrast(1.03);
+    }
+
+    .cover-content {
       position: absolute;
-      border-radius: 999px;
-      filter: blur(.4px);
-    }
-
-    .cover-bowl::before {
-      width: 110px;
-      height: 34px;
-      background: linear-gradient(90deg, rgba(228,87,46,.88), rgba(255,138,76,.82));
-      box-shadow:
-        0 -20px 0 2px rgba(95,43,26,.08),
-        0 14px 0 0 rgba(45,106,79,.10);
-      transform: translateY(6px) rotate(-7deg);
-    }
-
-    .cover-bowl::after {
-      width: 86px;
-      height: 18px;
-      background: rgba(255,255,255,.72);
-      transform: translateY(26px);
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 18px;
     }
 
     .cover-chip {
@@ -218,18 +198,33 @@
       gap: 8px;
       font-size: 12px;
       font-weight: 700;
-      color: var(--accent);
-      background: rgba(45,106,79,.08);
-      border: 1px solid rgba(45,106,79,.12);
+      color: #fff;
+      background: rgba(0,0,0,.32);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,.16);
       border-radius: 999px;
       padding: 7px 10px;
       margin-bottom: 8px;
+      width: fit-content;
     }
 
     .cover-note {
+      font-size: 18px;
+      color: #fff;
+      line-height: 1.1;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      text-shadow: 0 6px 20px rgba(0,0,0,.30);
+      max-width: 12ch;
+    }
+
+    .cover-sub {
+      margin-top: 6px;
+      color: rgba(255,255,255,.92);
       font-size: 13px;
-      color: var(--muted);
       line-height: 1.45;
+      max-width: 28ch;
+      text-shadow: 0 4px 12px rgba(0,0,0,.26);
     }
 
     .hero-grid {
@@ -549,24 +544,25 @@
           </div>
 
           <div class="cover-card" aria-label="Capa do cardápio">
-            <div class="cover-chip">🔥 Quentinho, rápido e do seu jeito</div>
-            <div class="cover-bowl" aria-hidden="true"></div>
-            <div class="cover-note">
-              Uma capa simples, com cara de comida boa e leitura rápida no celular.
+            <img class="cover-image" src="./assets/macarrao-foodporn.png" alt="Macarrão da Mary pronto para servir" />
+            <div class="cover-content">
+              <div class="cover-chip">🔥 Quentinho • feito na hora</div>
+              <div class="cover-note">Macarrão da Mary</div>
+              <div class="cover-sub">Uma capa real, apetitosa e com cara de produto que vende no primeiro olhar.</div>
             </div>
           </div>
         </div>
       </div>
 
       <div class="hero-grid">
-        <div class="stat"><b>Fluxo</b><span>Escolhe → resume → envia</span></div>
-        <div class="stat"><b>Canal</b><span>WhatsApp</span></div>
-        <div class="stat"><b>Entrega</b><span>Endereço + referência</span></div>
+        <div class="stat"><b>🧭 Fluxo</b><span>Escolhe → resume → envia</span></div>
+        <div class="stat"><b>📲 Canal</b><span>WhatsApp</span></div>
+        <div class="stat"><b>🚚 Entrega</b><span>Endereço + referência</span></div>
       </div>
 
       <div class="content">
         <section class="section" id="packageSection">
-          <h2>1) Escolha o pacote</h2>
+          <h2>1) 🍝 Escolha o pacote</h2>
           <p class="lead">A Clássica inclui até 8 ingredientes. A Completona inclui até 12 ingredientes.</p>
           <div class="choice-row">
             <div class="pill selected" data-group="package" data-value="A CLÁSSICA — R$ 24,00 (Até 08 ingredientes)">
@@ -587,7 +583,7 @@
         </section>
 
         <section class="section">
-          <h2>2) Escolha a massa</h2>
+          <h2>2) 🍜 Escolha a massa</h2>
           <div class="choice-row" data-single-group="massa">
             <div class="pill selected" data-value="Penne"><label><input type="radio" name="massa" checked /><span class="title">Penne</span><span class="desc">clássico e versátil</span></label></div>
             <div class="pill" data-value="Parafuso"><label><input type="radio" name="massa" /><span class="title">Parafuso</span><span class="desc">segura bem o molho</span></label></div>
@@ -597,7 +593,7 @@
         </section>
 
         <section class="section">
-          <h2>3) Escolha o molho</h2>
+          <h2>3) 🥫 Escolha o molho</h2>
           <div class="choice-row" data-single-group="molho">
             <div class="pill selected" data-value="Bolonhesa"><label><input type="radio" name="molho" checked /><span class="title">Bolonhesa</span><span class="desc">sabor marcante</span></label></div>
             <div class="pill" data-value="Branco"><label><input type="radio" name="molho" /><span class="title">Branco</span><span class="desc">cremoso</span></label></div>
@@ -606,7 +602,7 @@
         </section>
 
         <section class="section">
-          <h2>4) Escolha a carne</h2>
+          <h2>4) 🥩 Escolha a carne</h2>
           <div class="choice-row" data-single-group="carne">
             <div class="pill selected" data-value="Frango Desfiado"><label><input type="radio" name="carne" checked /><span class="title">Frango Desfiado</span><span class="desc">leve e saboroso</span></label></div>
             <div class="pill" data-value="Carne Moída"><label><input type="radio" name="carne" /><span class="title">Carne Moída</span><span class="desc">tradicional</span></label></div>
@@ -614,7 +610,7 @@
         </section>
 
         <section class="section" id="ingredientsSection">
-          <h2>5) Escolha os ingredientes</h2>
+          <h2>5) 🧄 Escolha os ingredientes</h2>
           <p class="lead">Selecione até o limite do pacote escolhido.</p>
           <div class="grid-4" id="ingredientsGrid">
             <div class="check" data-value="Azeitona"><label><input type="checkbox" /><span class="title">Azeitona</span><span class="desc">extra sabor</span></label></div>
@@ -634,7 +630,7 @@
         </section>
 
         <section class="section">
-          <h2>6) Bônus grátis</h2>
+          <h2>6) 🎁 Bônus grátis</h2>
           <p class="lead">Escolha até 3 finalizações sem custo.</p>
           <div class="grid-4" id="bonusGrid">
             <div class="check" data-value="Pimenta Calabresa"><label><input type="checkbox" /><span class="title">🌶️ Pimenta</span><span class="desc">calabresa</span></label></div>
@@ -645,7 +641,7 @@
         </section>
 
         <section class="section">
-          <h2>7) Seus dados de entrega</h2>
+          <h2>7) 📍 Seus dados de entrega</h2>
           <p class="lead">Aqui entram os dados que vão direto na mensagem do WhatsApp.</p>
           <div class="field-grid">
             <div>

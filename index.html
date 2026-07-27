@@ -539,12 +539,12 @@
             <div class="eyebrow">🍝 Cardápio digital simples</div>
             <h1>Monte seu macarrão do seu jeito</h1>
             <div class="subtitle">
-              O cliente escolhe a massa, o molho, a carne, os ingredientes e as finalizações. No fim, o pedido já vai pronto pro WhatsApp com endereço e ponto de referência.
+              Monte seu prato do seu jeito: escolha a massa, o molho, a proteína e os ingredientes. No final, o pedido já vai pronto para o WhatsApp com endereço e ponto de referência.
             </div>
           </div>
 
           <div class="cover-card" aria-label="Capa do cardápio">
-            <img class="cover-image" src="./assets/macarrao-foodporn.png" alt="Macarrão da Mary pronto para servir" />
+            <img class="cover-image" src="./assets/macarrao-foodporn.webp" alt="Macarrão da Mary pronto para servir" />
             <div class="cover-content">
               <div class="cover-chip">🔥 Quentinho • feito na hora</div>
               <div class="cover-note">Macarrão da Mary</div>
@@ -562,8 +562,8 @@
 
       <div class="content">
         <section class="section" id="packageSection">
-          <h2>1) 🍝 Escolha o pacote</h2>
-          <p class="lead">A Clássica inclui até 8 ingredientes. A Completona inclui até 12 ingredientes.</p>
+          <h2>1) 🍝 Escolha sua versão</h2>
+          <p class="lead">Escolha a versão ideal para o seu pedido.</p>
           <div class="choice-row">
             <div class="pill selected" data-group="package" data-value="A CLÁSSICA — R$ 24,00 (Até 08 ingredientes)">
               <label>
@@ -584,6 +584,7 @@
 
         <section class="section">
           <h2>2) 🍜 Escolha a massa</h2>
+          <p class="lead">Monte seu prato com o tipo de massa que você prefere.</p>
           <div class="choice-row" data-single-group="massa">
             <div class="pill selected" data-value="Penne"><label><input type="radio" name="massa" checked /><span class="title">Penne</span><span class="desc">clássico e versátil</span></label></div>
             <div class="pill" data-value="Parafuso"><label><input type="radio" name="massa" /><span class="title">Parafuso</span><span class="desc">segura bem o molho</span></label></div>
@@ -594,6 +595,7 @@
 
         <section class="section">
           <h2>3) 🥫 Escolha o molho</h2>
+          <p class="lead">Agora escolha o molho que vai dar o gosto principal do prato.</p>
           <div class="choice-row" data-single-group="molho">
             <div class="pill selected" data-value="Bolonhesa"><label><input type="radio" name="molho" checked /><span class="title">Bolonhesa</span><span class="desc">sabor marcante</span></label></div>
             <div class="pill" data-value="Branco"><label><input type="radio" name="molho" /><span class="title">Branco</span><span class="desc">cremoso</span></label></div>
@@ -603,6 +605,7 @@
 
         <section class="section">
           <h2>4) 🥩 Escolha a carne</h2>
+          <p class="lead">Selecione a proteína que combina com o seu pedido.</p>
           <div class="choice-row" data-single-group="carne">
             <div class="pill selected" data-value="Frango Desfiado"><label><input type="radio" name="carne" checked /><span class="title">Frango Desfiado</span><span class="desc">leve e saboroso</span></label></div>
             <div class="pill" data-value="Carne Moída"><label><input type="radio" name="carne" /><span class="title">Carne Moída</span><span class="desc">tradicional</span></label></div>
@@ -611,7 +614,7 @@
 
         <section class="section" id="ingredientsSection">
           <h2>5) 🧄 Escolha os ingredientes</h2>
-          <p class="lead">Selecione até o limite do pacote escolhido.</p>
+          <p class="lead">Agora é só adicionar o que você quer no prato.</p>
           <div class="grid-4" id="ingredientsGrid">
             <div class="check" data-value="Azeitona"><label><input type="checkbox" /><span class="title">Azeitona</span><span class="desc">extra sabor</span></label></div>
             <div class="check" data-value="Salsicha"><label><input type="checkbox" /><span class="title">Salsicha</span><span class="desc">popular</span></label></div>
@@ -631,7 +634,7 @@
 
         <section class="section">
           <h2>6) 🎁 Bônus grátis</h2>
-          <p class="lead">Escolha até 3 finalizações sem custo.</p>
+          <p class="lead">Pode escolher até 3 finalizações grátis.</p>
           <div class="grid-4" id="bonusGrid">
             <div class="check" data-value="Pimenta Calabresa"><label><input type="checkbox" /><span class="title">🌶️ Pimenta</span><span class="desc">calabresa</span></label></div>
             <div class="check" data-value="Orégano"><label><input type="checkbox" /><span class="title">🌿 Orégano</span><span class="desc">clássico</span></label></div>
@@ -642,7 +645,7 @@
 
         <section class="section">
           <h2>7) 📍 Seus dados de entrega</h2>
-          <p class="lead">Aqui entram os dados que vão direto na mensagem do WhatsApp.</p>
+          <p class="lead">Preencha os dados para entregar sem erro.</p>
           <div class="field-grid">
             <div>
               <input id="customerName" type="text" placeholder="Seu nome" />
@@ -665,15 +668,19 @@
     <aside class="summary">
       <div class="summary-card">
         <div class="package-badge">Resumo do pedido</div>
-        <h3>Pedido pronto para WhatsApp</h3>
-        <div class="small">Tudo que o cliente selecionar entra automaticamente na mensagem final.</div>
+        <h3>Seu pedido pronto para enviar</h3>
+        <div class="small">Tudo o que você escolher entra automaticamente na mensagem final do WhatsApp.</div>
+        <div class="summary-highlight">
+          <strong>Finalize sem complicação</strong>
+          <span>Escolha os itens, coloque o endereço e o ponto de referência e siga para o pedido.</span>
+        </div>
 
         <ul class="summary-list" id="summaryList"></ul>
 
         <div class="error" id="errorBox"></div>
 
         <div class="cta">
-          <button class="btn btn-primary" id="whatsBtn">📲 Concluir pedido no WhatsApp</button>
+          <button class="btn btn-primary" id="whatsBtn">📲 Finalizar pedido no WhatsApp</button>
           <button class="btn btn-secondary" id="resetBtn" type="button">Limpar escolhas</button>
         </div>
 
@@ -683,7 +690,7 @@
 
         <div class="footer-note">
           Número configurado: <b>(62) 98204-2056</b><br />
-          O pedido abre pronto para envio no WhatsApp com massa, molho, carne, ingredientes, bônus, endereço e referência.
+          O pedido abre pronto para envio no WhatsApp com massa, molho, proteína, ingredientes, bônus, endereço e referência.
         </div>
       </div>
     </aside>

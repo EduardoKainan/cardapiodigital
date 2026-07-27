@@ -314,6 +314,8 @@
       gap: 4px;
       cursor: pointer;
       user-select: none;
+      width: 100%;
+      height: 100%;
     }
 
     .pill .title, .check .title {
@@ -613,18 +615,18 @@
           <h2>5) 🧄 Escolha os ingredientes</h2>
           <p class="lead">Agora é só adicionar o que você quer no prato.</p>
           <div class="grid-4" id="ingredientsGrid">
-            <div class="check" data-value="Azeitona"><label><input type="checkbox" onclick="toggleIngredient('Azeitona')" /><span class="title">Azeitona</span><span class="desc">extra sabor</span></label></div>
-            <div class="check" data-value="Salsicha" onclick="toggleIngredient('Salsicha')"><label><input type="checkbox" onclick="event.stopPropagation(); (this.closest('#bonusGrid') ? toggleBonus(this.closest('.check').dataset.value) : toggleIngredient(this.closest('.check').dataset.value))" /><span class="title">Salsicha</span><span class="desc">popular</span></label></div>
-            <div class="check" data-value="Milho" onclick="toggleIngredient('Milho')"><label><input type="checkbox" onclick="event.stopPropagation(); (this.closest('#bonusGrid') ? toggleBonus(this.closest('.check').dataset.value) : toggleIngredient(this.closest('.check').dataset.value))" /><span class="title">Milho</span><span class="desc">leve e doce</span></label></div>
-            <div class="check" data-value="Mussarela" onclick="toggleIngredient('Mussarela')"><label><input type="checkbox" onclick="event.stopPropagation(); (this.closest('#bonusGrid') ? toggleBonus(this.closest('.check').dataset.value) : toggleIngredient(this.closest('.check').dataset.value))" /><span class="title">Mussarela</span><span class="desc">cremosidade</span></label></div>
-            <div class="check" data-value="Ervilha" onclick="toggleIngredient('Ervilha')"><label><input type="checkbox" onclick="event.stopPropagation(); (this.closest('#bonusGrid') ? toggleBonus(this.closest('.check').dataset.value) : toggleIngredient(this.closest('.check').dataset.value))" /><span class="title">Ervilha</span><span class="desc">clássico</span></label></div>
-            <div class="check" data-value="Frango Desfiado" onclick="toggleIngredient('Frango Desfiado')"><label><input type="checkbox" onclick="event.stopPropagation(); (this.closest('#bonusGrid') ? toggleBonus(this.closest('.check').dataset.value) : toggleIngredient(this.closest('.check').dataset.value))" /><span class="title">Frango Desfiado</span><span class="desc">mais proteína</span></label></div>
-            <div class="check" data-value="Bacon" onclick="toggleIngredient('Bacon')"><label><input type="checkbox" onclick="event.stopPropagation(); (this.closest('#bonusGrid') ? toggleBonus(this.closest('.check').dataset.value) : toggleIngredient(this.closest('.check').dataset.value))" /><span class="title">Bacon</span><span class="desc">sabor extra</span></label></div>
-            <div class="check" data-value="Calabresa" onclick="toggleIngredient('Calabresa')"><label><input type="checkbox" onclick="event.stopPropagation(); (this.closest('#bonusGrid') ? toggleBonus(this.closest('.check').dataset.value) : toggleIngredient(this.closest('.check').dataset.value))" /><span class="title">Calabresa</span><span class="desc">bem temperada</span></label></div>
-            <div class="check" data-value="Uvas Passas" onclick="toggleIngredient('Uvas Passas')"><label><input type="checkbox" onclick="event.stopPropagation(); (this.closest('#bonusGrid') ? toggleBonus(this.closest('.check').dataset.value) : toggleIngredient(this.closest('.check').dataset.value))" /><span class="title">Uvas Passas</span><span class="desc">toque agridoce</span></label></div>
-            <div class="check" data-value="Batata Palha" onclick="toggleIngredient('Batata Palha')"><label><input type="checkbox" onclick="event.stopPropagation(); (this.closest('#bonusGrid') ? toggleBonus(this.closest('.check').dataset.value) : toggleIngredient(this.closest('.check').dataset.value))" /><span class="title">Batata Palha</span><span class="desc">crocância</span></label></div>
-            <div class="check" data-value="Ovo de Codorna" onclick="toggleIngredient('Ovo de Codorna')"><label><input type="checkbox" onclick="event.stopPropagation(); (this.closest('#bonusGrid') ? toggleBonus(this.closest('.check').dataset.value) : toggleIngredient(this.closest('.check').dataset.value))" /><span class="title">Ovo de Codorna</span><span class="desc">diferente</span></label></div>
-            <div class="check" data-value="Tomate Cereja" onclick="toggleIngredient('Tomate Cereja')"><label><input type="checkbox" onclick="event.stopPropagation(); (this.closest('#bonusGrid') ? toggleBonus(this.closest('.check').dataset.value) : toggleIngredient(this.closest('.check').dataset.value))" /><span class="title">Tomate Cereja</span><span class="desc">fresco</span></label></div>
+            <div class="check" data-value="Azeitona"><label onclick="toggleIngredient('Azeitona')"><input type="checkbox" /><span class="title">Azeitona</span><span class="desc">extra sabor</span></label></div>
+            <div class="check" data-value="Salsicha"><label onclick="toggleIngredient('Salsicha')"><input type="checkbox" /><span class="title">Salsicha</span><span class="desc">popular</span></label></div>
+            <div class="check" data-value="Milho"><label onclick="toggleIngredient('Milho')"><input type="checkbox" /><span class="title">Milho</span><span class="desc">leve e doce</span></label></div>
+            <div class="check" data-value="Mussarela"><label onclick="toggleIngredient('Mussarela')"><input type="checkbox" /><span class="title">Mussarela</span><span class="desc">cremosidade</span></label></div>
+            <div class="check" data-value="Ervilha"><label onclick="toggleIngredient('Ervilha')"><input type="checkbox" /><span class="title">Ervilha</span><span class="desc">clássico</span></label></div>
+            <div class="check" data-value="Frango Desfiado"><label onclick="toggleIngredient('Frango Desfiado')"><input type="checkbox" /><span class="title">Frango Desfiado</span><span class="desc">mais proteína</span></label></div>
+            <div class="check" data-value="Bacon"><label onclick="toggleIngredient('Bacon')"><input type="checkbox" /><span class="title">Bacon</span><span class="desc">sabor extra</span></label></div>
+            <div class="check" data-value="Calabresa"><label onclick="toggleIngredient('Calabresa')"><input type="checkbox" /><span class="title">Calabresa</span><span class="desc">bem temperada</span></label></div>
+            <div class="check" data-value="Uvas Passas"><label onclick="toggleIngredient('Uvas Passas')"><input type="checkbox" /><span class="title">Uvas Passas</span><span class="desc">toque agridoce</span></label></div>
+            <div class="check" data-value="Batata Palha"><label onclick="toggleIngredient('Batata Palha')"><input type="checkbox" /><span class="title">Batata Palha</span><span class="desc">crocância</span></label></div>
+            <div class="check" data-value="Ovo de Codorna"><label onclick="toggleIngredient('Ovo de Codorna')"><input type="checkbox" /><span class="title">Ovo de Codorna</span><span class="desc">diferente</span></label></div>
+            <div class="check" data-value="Tomate Cereja"><label onclick="toggleIngredient('Tomate Cereja')"><input type="checkbox" /><span class="title">Tomate Cereja</span><span class="desc">fresco</span></label></div>
           </div>
           <div class="counter">Selecionados: <strong id="ingredientCount">0</strong> / <strong id="ingredientLimit">8</strong></div>
         </section>
@@ -633,9 +635,9 @@
           <h2>6) 🎁 Bônus grátis</h2>
           <p class="lead">Pode escolher até 3 finalizações grátis.</p>
           <div class="grid-4" id="bonusGrid">
-            <div class="check" data-value="Pimenta Calabresa" onclick="toggleBonus('Pimenta Calabresa')"><label><input type="checkbox" onclick="event.stopPropagation(); (this.closest('#bonusGrid') ? toggleBonus(this.closest('.check').dataset.value) : toggleIngredient(this.closest('.check').dataset.value))" /><span class="title">🌶️ Pimenta</span><span class="desc">calabresa</span></label></div>
-            <div class="check" data-value="Orégano" onclick="toggleBonus('Orégano')"><label><input type="checkbox" onclick="event.stopPropagation(); (this.closest('#bonusGrid') ? toggleBonus(this.closest('.check').dataset.value) : toggleIngredient(this.closest('.check').dataset.value))" /><span class="title">🌿 Orégano</span><span class="desc">clássico</span></label></div>
-            <div class="check" data-value="Cebolinha" onclick="toggleBonus('Cebolinha')"><label><input type="checkbox" onclick="event.stopPropagation(); (this.closest('#bonusGrid') ? toggleBonus(this.closest('.check').dataset.value) : toggleIngredient(this.closest('.check').dataset.value))" /><span class="title">🌱 Cebolinha</span><span class="desc">fresco</span></label></div>
+            <div class="check" data-value="Pimenta Calabresa"><label onclick="toggleBonus('Pimenta Calabresa')"><input type="checkbox" /><span class="title">🌶️ Pimenta</span><span class="desc">calabresa</span></label></div>
+            <div class="check" data-value="Orégano"><label onclick="toggleBonus('Orégano')"><input type="checkbox" /><span class="title">🌿 Orégano</span><span class="desc">clássico</span></label></div>
+            <div class="check" data-value="Cebolinha"><label onclick="toggleBonus('Cebolinha')"><input type="checkbox" /><span class="title">🌱 Cebolinha</span><span class="desc">fresco</span></label></div>
           </div>
           <div class="counter">Selecionados: <strong id="bonusCount">0</strong> / <strong>3</strong></div>
         </section>
@@ -827,21 +829,25 @@
       const selectedPackage = state.package.includes('CLÁSSICA') ? 'A Clássica — R$ 24,00' : 'A Completona — R$ 27,00';
 
       const lines = [
-        'Oi! Quero pedir o Macarrão da Mary.',
+        '*Macarrão da Mary*',
         '',
+        '*Pedido*',
         `Pacote: ${selectedPackage}`,
         `Massa: ${state.massa}`,
         `Molho: ${state.molho}`,
         `Carne: ${state.carne}`,
         `Ingredientes: ${state.ingredients.length ? state.ingredients.join(', ') : 'nenhum'}`,
         `Bônus grátis: ${state.bonuses.length ? state.bonuses.join(', ') : 'nenhum'}`,
+        '',
+        '*Entrega*',
+        `Nome: ${name || '[preencher nome]'}`,
+        `WhatsApp: ${phone || '[opcional]'}`,
+        `Endereço: ${address || '[preencher endereço]'}`,
+        `Referência: ${ref || '[preencher referência]'}`,
+        '',
+        'Pode confirmar, por favor?'
       ];
 
-      if (name) lines.push(`Nome: ${name}`);
-      if (phone) lines.push(`WhatsApp: ${phone}`);
-      lines.push(`Endereço de entrega: ${address || '[preencher endereço]'}`);
-      lines.push(`Ponto de referência: ${ref || '[preencher referência]'}`);
-      lines.push('', 'Pode confirmar, por favor?');
       return lines.join('\n');
     }
 

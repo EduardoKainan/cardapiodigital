@@ -657,17 +657,6 @@
           </div>
         </section>
 
-        <section class="section" id="quantitySection">
-          <h2>3) 🍽️ Quantos macarrões você quer?</h2>
-          <p class="lead">Os combos abaixo têm 10% de desconto em cada pedido do combo.</p>
-          <div class="choice-row" data-single-group="quantity">
-            <div class="pill selected" data-value="1"><label><input type="radio" name="quantity" checked /><span class="title">1 macarrão</span><span class="desc">pedido avulso</span></label></div>
-            <div class="pill" data-value="2"><label><input type="radio" name="quantity" /><span class="title">Combo 2</span><span class="desc">10% de desconto</span></label></div>
-            <div class="pill" data-value="4"><label><input type="radio" name="quantity" /><span class="title">Combo 4</span><span class="desc">10% de desconto</span></label></div>
-            <div class="pill" data-value="6"><label><input type="radio" name="quantity" /><span class="title">Combo 6</span><span class="desc">10% de desconto</span></label></div>
-          </div>
-        </section>
-
         <section class="section">
           <h2>4) 🍜 Escolha a massa</h2>
           <p class="lead">Monte seu prato com o tipo de massa que você prefere.</p>
@@ -795,12 +784,9 @@
     'A COMPLETONA — R$ 27,00 (Até 12 ingredientes)': 27,
   };
 
-  const comboDiscountQuantity = new Set([2, 4, 6]);
-
   function createDefaultItem() {
     return {
       package: 'A CLÁSSICA — R$ 24,00 (Até 08 ingredientes)',
-      quantity: 1,
       massa: 'Penne',
       molho: 'Bolonhesa',
       carne: 'Frango Desfiado',
@@ -824,7 +810,6 @@
   function cloneItem(item) {
     return {
       package: item.package,
-      quantity: item.quantity,
       massa: item.massa,
       molho: item.molho,
       carne: item.carne,
@@ -846,20 +831,13 @@
   function getUnitPrice(item = currentItem()) {
     return priceMap[item.package] || 0;
   }
-
-  function getComboMultiplier(item = currentItem()) {
-    return comboDiscountQuantity.has(item.quantity) ? 0.9 : 1;
-  }
-
   function getTotals(item = currentItem()) {
     const unitPrice = getUnitPrice(item);
-    const subtotal = unitPrice * item.quantity;
-    const total = subtotal * getComboMultiplier(item);
     return {
       unitPrice,
-      subtotal,
-      discount: subtotal - total,
-      total,
+      subtotal: unitPrice,
+      discount: 0,
+      total: unitPrice,
     };
   }
 
@@ -889,7 +867,6 @@
   function applyItemToForm() {
     const item = currentItem();
     qsa('[data-group="package"]').forEach(p => p.classList.toggle('selected', p.dataset.value === item.package));
-    syncPills('quantity', String(item.quantity));
     syncPills('massa', item.massa);
     syncPills('molho', item.molho);
     syncPills('carne', item.carne);
@@ -943,14 +920,13 @@
     if (!box) return;
     box.innerHTML = state.items.map((item, idx) => {
       const totals = getTotals(item);
-      const title = item.quantity === 1 ? 'Avulso' : `Combo ${item.quantity}`;
       const pkg = item.package.includes('CLÁSSICA') ? 'A Clássica' : 'A Completona';
       const active = idx === state.currentIndex ? 'active' : '';
       return `
         <div class="order-item ${active}">
           <div class="meta">
             <strong>Item ${idx + 1}</strong>
-            <span>${pkg} • ${title} • ${money(totals.total)}</span>
+            <span>${pkg} • ${money(totals.total)}</span>
             <span class="small">${item.massa} • ${item.molho} • ${item.carne}</span>
           </div>
           <div class="actions">
@@ -964,14 +940,6 @@
   function syncPackage(value) {
     const item = currentItem();
     item.package = value;
-    applyItemToForm();
-    updateSummary();
-    renderOrderItems();
-  }
-
-  function syncQuantity(value) {
-    const item = currentItem();
-    item.quantity = Number(value);
     applyItemToForm();
     updateSummary();
     renderOrderItems();
@@ -1022,8 +990,7 @@
     state.items.forEach((item, idx) => {
       const totals = getTotals(item);
       const pkg = item.package.includes('CLÁSSICA') ? 'A Clássica' : 'A Completona';
-      const comboLabel = item.quantity === 1 ? 'Avulso' : `Combo ${item.quantity}`;
-      items.push(`<li><b>Item ${idx + 1}:</b> ${pkg} • ${comboLabel} • ${money(totals.total)}</li>`);
+      items.push(`<li><b>Item ${idx + 1}:</b> ${pkg} • ${money(totals.total)}</li>`);
       items.push(`<li><b>Massa ${idx + 1}:</b> ${item.massa} | <b>Molho:</b> ${item.molho} | <b>Carne:</b> ${item.carne}</li>`);
       items.push(`<li><b>Ingredientes:</b> ${item.ingredients.length ? item.ingredients.join(', ') : 'nenhum selecionado'}</li>`);
       items.push(`<li><b>Bônus grátis:</b> ${item.bonuses.length ? item.bonuses.join(', ') : 'nenhum selecionado'}</li>`);
@@ -1066,14 +1033,10 @@
     state.items.forEach((item, idx) => {
       const totals = getTotals(item);
       const pkg = item.package.includes('CLÁSSICA') ? 'A Clássica' : 'A Completona';
-      const comboLabel = item.quantity === 1 ? 'Avulso' : `Combo ${item.quantity}`;
       lines.push(
         `*Item ${idx + 1}*`,
         `Pacote: ${pkg}`,
-        `Quantidade: ${comboLabel}`,
         `Valor unitário: ${money(totals.unitPrice)}`,
-        `Subtotal: ${money(totals.subtotal)}`,
-        `Desconto combo: ${totals.discount > 0 ? money(totals.discount) + ' (10%)' : 'nenhum'}`,
         `Total: ${money(totals.total)}`,
         `Massa: ${item.massa}`,
         `Molho: ${item.molho}`,
@@ -1128,13 +1091,6 @@
 
   qsa('[data-group="package"]').forEach(card => {
     card.addEventListener('click', () => syncPackage(card.dataset.value));
-  });
-
-  qsa('.choice-row[data-single-group="quantity"] .pill').forEach(card => {
-    card.addEventListener('click', () => {
-      syncQuantity(card.dataset.value);
-      hideError();
-    });
   });
 
   ['massa', 'molho', 'carne'].forEach(group => {

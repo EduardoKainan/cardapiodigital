@@ -290,6 +290,63 @@
       gap: 10px;
     }
 
+    .order-tools {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .order-items {
+      display: grid;
+      gap: 10px;
+    }
+
+    .order-item {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
+      background: #fff;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      box-shadow: 0 8px 18px rgba(56, 23, 15, 0.04);
+    }
+
+    .order-item.active {
+      border-color: rgba(228,87,46,.65);
+      background: linear-gradient(180deg, rgba(228,87,46,.08), rgba(255,138,76,.06));
+    }
+
+    .order-item .meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .order-item .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .order-item .mini {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 999px;
+      padding: 8px 10px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .order-item .mini:hover {
+      border-color: rgba(228,87,46,.36);
+    }
+
     .pill, .check, .input-card {
       border: 1px solid var(--line);
       border-radius: 16px;
@@ -569,9 +626,19 @@
       </div>
 
       <div class="content">
+        <section class="section" id="itemsSection">
+          <h2>1) 🍽️ Seus macarrões no pedido</h2>
+          <p class="lead">Adicione quantos quiser e deixe cada um com sabor diferente.</p>
+          <div class="order-tools">
+            <button type="button" class="btn btn-secondary" id="addItemBtn">➕ Adicionar outro macarrão</button>
+            <span class="small" id="itemHint">Você está editando o item 1.</span>
+          </div>
+          <div class="order-items" id="orderItems"></div>
+        </section>
+
         <section class="section" id="packageSection">
-          <h2>1) 🍝 Escolha sua versão</h2>
-          <p class="lead">Escolha a versão ideal para o seu pedido.</p>
+          <h2>2) 🍝 Escolha sua versão</h2>
+          <p class="lead">Escolha a versão ideal para o item que você está editando.</p>
           <div class="choice-row">
             <div class="pill selected" data-group="package" data-value="A CLÁSSICA — R$ 24,00 (Até 08 ingredientes)">
               <label>
@@ -591,7 +658,7 @@
         </section>
 
         <section class="section" id="quantitySection">
-          <h2>2) 🍽️ Quantos macarrões você quer?</h2>
+          <h2>3) 🍽️ Quantos macarrões você quer?</h2>
           <p class="lead">Os combos abaixo têm 10% de desconto em cada pedido do combo.</p>
           <div class="choice-row" data-single-group="quantity">
             <div class="pill selected" data-value="1"><label><input type="radio" name="quantity" checked /><span class="title">1 macarrão</span><span class="desc">pedido avulso</span></label></div>
@@ -715,21 +782,23 @@
     </aside>
   </main>
 
-  <script>
-    const WHATSAPP_NUMBER = '5562982042056';
-    const packageMap = {
-      'A CLÁSSICA — R$ 24,00 (Até 08 ingredientes)': 8,
-      'A COMPLETONA — R$ 27,00 (Até 12 ingredientes)': 12,
-    };
+  
+<script>
+  const WHATSAPP_NUMBER = '5562982042056';
+  const packageMap = {
+    'A CLÁSSICA — R$ 24,00 (Até 08 ingredientes)': 8,
+    'A COMPLETONA — R$ 27,00 (Até 12 ingredientes)': 12,
+  };
 
-    const priceMap = {
-      'A CLÁSSICA — R$ 24,00 (Até 08 ingredientes)': 24,
-      'A COMPLETONA — R$ 27,00 (Até 12 ingredientes)': 27,
-    };
+  const priceMap = {
+    'A CLÁSSICA — R$ 24,00 (Até 08 ingredientes)': 24,
+    'A COMPLETONA — R$ 27,00 (Até 12 ingredientes)': 27,
+  };
 
-    const comboDiscountQuantity = new Set([2, 4, 6]);
+  const comboDiscountQuantity = new Set([2, 4, 6]);
 
-    const state = {
+  function createDefaultItem() {
+    return {
       package: 'A CLÁSSICA — R$ 24,00 (Até 08 ingredientes)',
       quantity: 1,
       massa: 'Penne',
@@ -738,282 +807,368 @@
       ingredients: [],
       bonuses: [],
     };
+  }
 
-    const qs = (s, el=document) => el.querySelector(s);
-    const qsa = (s, el=document) => Array.from(el.querySelectorAll(s));
+  const state = {
+    items: [createDefaultItem()],
+    currentIndex: 0,
+  };
 
-    function syncPills(groupName, selectedValue) {
-      qsa(`.choice-row[data-single-group="${groupName}"] .pill`).forEach(p => {
-        p.classList.toggle('selected', p.dataset.value === selectedValue);
-      });
-    }
+  const qs = (s, el = document) => el.querySelector(s);
+  const qsa = (s, el = document) => Array.from(el.querySelectorAll(s));
 
-    function money(value) {
-      return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    }
+  function currentItem() {
+    return state.items[state.currentIndex];
+  }
 
-    function getUnitPrice() {
-      return priceMap[state.package] || 0;
-    }
+  function cloneItem(item) {
+    return {
+      package: item.package,
+      quantity: item.quantity,
+      massa: item.massa,
+      molho: item.molho,
+      carne: item.carne,
+      ingredients: [...item.ingredients],
+      bonuses: [...item.bonuses],
+    };
+  }
 
-    function getComboMultiplier() {
-      return comboDiscountQuantity.has(state.quantity) ? 0.9 : 1;
-    }
+  function money(value) {
+    return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
 
-    function getTotals() {
-      const unitPrice = getUnitPrice();
-      const subtotal = unitPrice * state.quantity;
-      const total = subtotal * getComboMultiplier();
-      return {
-        unitPrice,
-        subtotal,
-        discount: subtotal - total,
-        total,
-      };
-    }
+  function syncPills(groupName, selectedValue) {
+    qsa(`.choice-row[data-single-group="${groupName}"] .pill`).forEach(p => {
+      p.classList.toggle('selected', p.dataset.value === selectedValue);
+    });
+  }
 
-    function syncQuantity(value) {
-      state.quantity = Number(value);
-      qsa('.choice-row[data-single-group="quantity"] .pill').forEach(p => {
-        p.classList.toggle('selected', p.dataset.value === String(state.quantity));
-      });
-      updateSummary();
-    }
+  function getUnitPrice(item = currentItem()) {
+    return priceMap[item.package] || 0;
+  }
 
-    function syncPackage(value) {
-      qsa('[data-group="package"]').forEach(p => p.classList.toggle('selected', p.dataset.value === value));
-      state.package = value;
-      const limit = packageMap[value];
-      qs('#ingredientLimit').textContent = limit;
-      qs('#ingredientCount').textContent = state.ingredients.length;
-      enforceIngredientLimit();
-      updateSummary();
-    }
+  function getComboMultiplier(item = currentItem()) {
+    return comboDiscountQuantity.has(item.quantity) ? 0.9 : 1;
+  }
 
-    function enforceIngredientLimit() {
-      const limit = packageMap[state.package];
-      const grid = qs('#ingredientsGrid');
-      const checkedCount = state.ingredients.length;
-      qsa('.check', grid).forEach(card => {
-        const isChecked = state.ingredients.includes(card.dataset.value);
-        const disabled = !isChecked && checkedCount >= limit;
-        card.style.opacity = disabled ? .45 : 1;
-        card.style.cursor = disabled ? 'not-allowed' : 'pointer';
-        card.dataset.disabled = disabled ? 'true' : 'false';
-        card.setAttribute('aria-disabled', disabled ? 'true' : 'false');
-      });
-      qs('#ingredientCount').textContent = checkedCount;
-      qs('#ingredientLimit').textContent = limit;
-    }
+  function getTotals(item = currentItem()) {
+    const unitPrice = getUnitPrice(item);
+    const subtotal = unitPrice * item.quantity;
+    const total = subtotal * getComboMultiplier(item);
+    return {
+      unitPrice,
+      subtotal,
+      discount: subtotal - total,
+      total,
+    };
+  }
 
-    function toggleIngredient(value) {
-      const limit = packageMap[state.package];
-      const idx = state.ingredients.indexOf(value);
-      if (idx >= 0) {
-        state.ingredients.splice(idx, 1);
-      } else {
-        if (state.ingredients.length >= limit) {
-          showError(`Seu pacote permite até ${limit} ingredientes. Remova um item para adicionar outro.`);
-          return;
-        }
-        state.ingredients.push(value);
+  function syncChecklist(gridId, selectedValues) {
+    qsa('.check', qs('#' + gridId)).forEach(card => {
+      card.classList.toggle('selected', selectedValues.includes(card.dataset.value));
+      const input = qs('input', card);
+      if (input) input.checked = selectedValues.includes(card.dataset.value);
+    });
+  }
+
+  function enforceIngredientLimit() {
+    const item = currentItem();
+    const limit = packageMap[item.package];
+    const grid = qs('#ingredientsGrid');
+    const checkedCount = item.ingredients.length;
+    qsa('.check', grid).forEach(card => {
+      const isChecked = item.ingredients.includes(card.dataset.value);
+      const disabled = !isChecked && checkedCount >= limit;
+      card.style.opacity = disabled ? .45 : 1;
+      card.style.cursor = disabled ? 'not-allowed' : 'pointer';
+      card.dataset.disabled = disabled ? 'true' : 'false';
+      card.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+    });
+  }
+
+  function applyItemToForm() {
+    const item = currentItem();
+    qsa('[data-group="package"]').forEach(p => p.classList.toggle('selected', p.dataset.value === item.package));
+    syncPills('quantity', String(item.quantity));
+    syncPills('massa', item.massa);
+    syncPills('molho', item.molho);
+    syncPills('carne', item.carne);
+    syncChecklist('ingredientsGrid', item.ingredients);
+    syncChecklist('bonusGrid', item.bonuses);
+    qs('#ingredientCount').textContent = item.ingredients.length;
+    qs('#ingredientLimit').textContent = packageMap[item.package];
+    qs('#bonusCount').textContent = item.bonuses.length;
+    qs('#itemHint').textContent = `Você está editando o item ${state.currentIndex + 1} de ${state.items.length}.`;
+    enforceIngredientLimit();
+  }
+
+  function selectItem(index) {
+    if (index < 0 || index >= state.items.length) return;
+    state.currentIndex = index;
+    applyItemToForm();
+    renderOrderItems();
+    updateSummary();
+    hideError();
+  }
+
+  function addItem() {
+    state.items.push(cloneItem(currentItem()));
+    state.currentIndex = state.items.length - 1;
+    applyItemToForm();
+    renderOrderItems();
+    updateSummary();
+    hideError();
+  }
+
+  function removeItem(index) {
+    if (state.items.length === 1) {
+      state.items = [createDefaultItem()];
+      state.currentIndex = 0;
+    } else {
+      state.items.splice(index, 1);
+      if (state.currentIndex >= state.items.length) {
+        state.currentIndex = state.items.length - 1;
+      } else if (state.currentIndex > index) {
+        state.currentIndex -= 1;
       }
-      syncChecklist('ingredientsGrid', state.ingredients);
-      enforceIngredientLimit();
-      hideError();
-      updateSummary();
     }
+    applyItemToForm();
+    renderOrderItems();
+    updateSummary();
+    hideError();
+  }
 
-    function toggleBonus(value) {
-      const idx = state.bonuses.indexOf(value);
-      if (idx >= 0) {
-        state.bonuses.splice(idx, 1);
-      } else {
-        if (state.bonuses.length >= 3) {
-          showError('Você pode escolher só 3 finalizações grátis.');
-          return;
-        }
-        state.bonuses.push(value);
+  function renderOrderItems() {
+    const box = qs('#orderItems');
+    if (!box) return;
+    box.innerHTML = state.items.map((item, idx) => {
+      const totals = getTotals(item);
+      const title = item.quantity === 1 ? 'Avulso' : `Combo ${item.quantity}`;
+      const pkg = item.package.includes('CLÁSSICA') ? 'A Clássica' : 'A Completona';
+      const active = idx === state.currentIndex ? 'active' : '';
+      return `
+        <div class="order-item ${active}">
+          <div class="meta">
+            <strong>Item ${idx + 1}</strong>
+            <span>${pkg} • ${title} • ${money(totals.total)}</span>
+            <span class="small">${item.massa} • ${item.molho} • ${item.carne}</span>
+          </div>
+          <div class="actions">
+            <button type="button" class="mini" onclick="selectItem(${idx})">Editar</button>
+            ${state.items.length > 1 ? `<button type="button" class="mini" onclick="removeItem(${idx})">Remover</button>` : ''}
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function syncPackage(value) {
+    const item = currentItem();
+    item.package = value;
+    applyItemToForm();
+    updateSummary();
+    renderOrderItems();
+  }
+
+  function syncQuantity(value) {
+    const item = currentItem();
+    item.quantity = Number(value);
+    applyItemToForm();
+    updateSummary();
+    renderOrderItems();
+  }
+
+  function toggleIngredient(value) {
+    const item = currentItem();
+    const limit = packageMap[item.package];
+    const idx = item.ingredients.indexOf(value);
+    if (idx >= 0) {
+      item.ingredients.splice(idx, 1);
+    } else {
+      if (item.ingredients.length >= limit) {
+        showError(`Seu pacote permite até ${limit} ingredientes. Remova um item para adicionar outro.`);
+        return;
       }
-      syncChecklist('bonusGrid', state.bonuses);
-      qs('#bonusCount').textContent = state.bonuses.length;
-      hideError();
-      updateSummary();
+      item.ingredients.push(value);
     }
+    applyItemToForm();
+    hideError();
+    updateSummary();
+    renderOrderItems();
+  }
 
-    function handleChoiceCardClick(e, gridId, toggleFn) {
-      const card = e.target.closest(`#${gridId} .check`);
-      if (!card) return;
-      e.preventDefault();
-      toggleFn(card.dataset.value);
+  function toggleBonus(value) {
+    const item = currentItem();
+    const idx = item.bonuses.indexOf(value);
+    if (idx >= 0) {
+      item.bonuses.splice(idx, 1);
+    } else {
+      if (item.bonuses.length >= 3) {
+        showError('Você pode escolher só 3 finalizações grátis.');
+        return;
+      }
+      item.bonuses.push(value);
     }
+    applyItemToForm();
+    hideError();
+    updateSummary();
+    renderOrderItems();
+  }
 
-    function syncChecklist(gridId, selectedValues) {
-      qsa('.check', qs('#' + gridId)).forEach(card => {
-        card.classList.toggle('selected', selectedValues.includes(card.dataset.value));
-        const input = qs('input', card);
-        if (input) input.checked = selectedValues.includes(card.dataset.value);
-      });
-    }
+  function updateSummary() {
+    const items = [];
+    const totalGeral = state.items.reduce((sum, item) => sum + getTotals(item).total, 0);
 
-    function updateSummary() {
-      const items = [];
-      const selectedPackage = state.package.includes('CLÁSSICA') ? 'A Clássica' : 'A Completona';
-      const totals = getTotals();
-      const comboLabel = state.quantity === 1 ? 'Avulso' : `Combo ${state.quantity}`;
+    items.push(`<li><b>Itens no pedido:</b> ${state.items.length}</li>`);
+    state.items.forEach((item, idx) => {
+      const totals = getTotals(item);
+      const pkg = item.package.includes('CLÁSSICA') ? 'A Clássica' : 'A Completona';
+      const comboLabel = item.quantity === 1 ? 'Avulso' : `Combo ${item.quantity}`;
+      items.push(`<li><b>Item ${idx + 1}:</b> ${pkg} • ${comboLabel} • ${money(totals.total)}</li>`);
+      items.push(`<li><b>Massa ${idx + 1}:</b> ${item.massa} | <b>Molho:</b> ${item.molho} | <b>Carne:</b> ${item.carne}</li>`);
+      items.push(`<li><b>Ingredientes:</b> ${item.ingredients.length ? item.ingredients.join(', ') : 'nenhum selecionado'}</li>`);
+      items.push(`<li><b>Bônus grátis:</b> ${item.bonuses.length ? item.bonuses.join(', ') : 'nenhum selecionado'}</li>`);
+    });
+    items.push(`<li><b>Total geral:</b> ${money(totalGeral)}</li>`);
 
-      items.push(`<li><b>Pacote:</b> ${selectedPackage} • ${money(totals.unitPrice)} cada</li>`);
-      items.push(`<li><b>Quantidade:</b> ${comboLabel}</li>`);
-      items.push(`<li><b>Subtotal:</b> ${money(totals.subtotal)}</li>`);
-      items.push(`<li><b>Desconto combo:</b> ${totals.discount > 0 ? money(totals.discount) + ' (10%)' : 'nenhum'}</li>`);
-      items.push(`<li><b>Total:</b> ${money(totals.total)}</li>`);
-      items.push(`<li><b>Massa:</b> ${state.massa}</li>`);
-      items.push(`<li><b>Molho:</b> ${state.molho}</li>`);
-      items.push(`<li><b>Carne:</b> ${state.carne}</li>`);
-      items.push(`<li><b>Ingredientes:</b> ${state.ingredients.length ? state.ingredients.join(', ') : 'nenhum selecionado'}</li>`);
-      items.push(`<li><b>Bônus grátis:</b> ${state.bonuses.length ? state.bonuses.join(', ') : 'nenhum selecionado'}</li>`);
-      qs('#summaryList').innerHTML = items.join('');
-      qs('#bonusCount').textContent = state.bonuses.length;
-      qs('#ingredientCount').textContent = state.ingredients.length;
-      qs('#ingredientLimit').textContent = packageMap[state.package];
-      enforceIngredientLimit();
-    }
+    qs('#summaryList').innerHTML = items.join('');
+    qs('#ingredientCount').textContent = currentItem().ingredients.length;
+    qs('#ingredientLimit').textContent = packageMap[currentItem().package];
+    qs('#bonusCount').textContent = currentItem().bonuses.length;
+    qs('#itemHint').textContent = `Você está editando o item ${state.currentIndex + 1} de ${state.items.length}.`;
+    enforceIngredientLimit();
+  }
 
-    function showError(msg) {
-      const box = qs('#errorBox');
-      box.textContent = msg;
-      box.style.display = 'block';
-    }
+  function showError(msg) {
+    const box = qs('#errorBox');
+    box.textContent = msg;
+    box.style.display = 'block';
+  }
 
-    function hideError() {
-      const box = qs('#errorBox');
-      box.style.display = 'none';
-      box.textContent = '';
-    }
+  function hideError() {
+    const box = qs('#errorBox');
+    box.style.display = 'none';
+    box.textContent = '';
+  }
 
-    function buildWhatsAppMessage() {
-      const name = qs('#customerName').value.trim();
-      const phone = qs('#customerPhone').value.trim();
-      const address = qs('#deliveryAddress').value.trim();
-      const ref = qs('#referencePoint').value.trim();
-      const selectedPackage = state.package.includes('CLÁSSICA') ? 'A Clássica' : 'A Completona';
-      const totals = getTotals();
-      const comboLabel = state.quantity === 1 ? 'Avulso' : `Combo ${state.quantity}`;
+  function buildWhatsAppMessage() {
+    const name = qs('#customerName').value.trim();
+    const phone = qs('#customerPhone').value.trim();
+    const address = qs('#deliveryAddress').value.trim();
+    const ref = qs('#referencePoint').value.trim();
+    const totalGeral = state.items.reduce((sum, item) => sum + getTotals(item).total, 0);
 
-      const lines = [
-        '*Macarrão da Mary*',
-        '',
-        '*Pedido*',
-        `Pacote: ${selectedPackage}`,
+    const lines = [
+      '*Macarrão da Mary*',
+      '',
+      '*Pedido*',
+    ];
+
+    state.items.forEach((item, idx) => {
+      const totals = getTotals(item);
+      const pkg = item.package.includes('CLÁSSICA') ? 'A Clássica' : 'A Completona';
+      const comboLabel = item.quantity === 1 ? 'Avulso' : `Combo ${item.quantity}`;
+      lines.push(
+        `*Item ${idx + 1}*`,
+        `Pacote: ${pkg}`,
         `Quantidade: ${comboLabel}`,
         `Valor unitário: ${money(totals.unitPrice)}`,
         `Subtotal: ${money(totals.subtotal)}`,
         `Desconto combo: ${totals.discount > 0 ? money(totals.discount) + ' (10%)' : 'nenhum'}`,
         `Total: ${money(totals.total)}`,
-        `Massa: ${state.massa}`,
-        `Molho: ${state.molho}`,
-        `Carne: ${state.carne}`,
-        `Ingredientes: ${state.ingredients.length ? state.ingredients.join(', ') : 'nenhum'}`,
-        `Bônus grátis: ${state.bonuses.length ? state.bonuses.join(', ') : 'nenhum'}`,
-        '',
-        '*Entrega*',
-        `Nome: ${name || '[preencher nome]'}`,
-        `WhatsApp: ${phone || '[opcional]'}`,
-        `Endereço: ${address || '[preencher endereço]'}`,
-        `Referência: ${ref || '[preencher referência]'}`,
-        '',
-        'Pode confirmar, por favor?'
-      ];
-
-      return lines.join('\n');
-    }
-
-    function validate() {
-      const address = qs('#deliveryAddress').value.trim();
-      const ref = qs('#referencePoint').value.trim();
-      const name = qs('#customerName').value.trim();
-      if (!name) {
-        showError('Coloque pelo menos o nome para concluir o pedido.');
-        return false;
-      }
-      if (!address) {
-        showError('Preencha o endereço de entrega.');
-        return false;
-      }
-      if (!ref) {
-        showError('Preencha também o ponto de referência.');
-        return false;
-      }
-      return true;
-    }
-
-    function openWhatsApp() {
-      hideError();
-      if (!validate()) return;
-      const text = buildWhatsAppMessage();
-      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
-      window.open(url, '_blank', 'noopener,noreferrer');
-    }
-
-    // Bind package
-    qsa('[data-group="package"]').forEach(card => {
-      card.addEventListener('click', () => syncPackage(card.dataset.value));
+        `Massa: ${item.massa}`,
+        `Molho: ${item.molho}`,
+        `Carne: ${item.carne}`,
+        `Ingredientes: ${item.ingredients.length ? item.ingredients.join(', ') : 'nenhum'}`,
+        `Bônus grátis: ${item.bonuses.length ? item.bonuses.join(', ') : 'nenhum'}`,
+        ''
+      );
     });
 
-    // Bind quantity
-    qsa('.choice-row[data-single-group="quantity"] .pill').forEach(card => {
+    lines.push(
+      `*Total geral:* ${money(totalGeral)}`,
+      '',
+      '*Entrega*',
+      `Nome: ${name || '[preencher nome]'}`,
+      `WhatsApp: ${phone || '[opcional]'}`,
+      `Endereço: ${address || '[preencher endereço]'}`,
+      `Referência: ${ref || '[preencher referência]'}`,
+      '',
+      'Pode confirmar, por favor?'
+    );
+
+    return lines.join('\n');
+  }
+
+  function validate() {
+    const address = qs('#deliveryAddress').value.trim();
+    const ref = qs('#referencePoint').value.trim();
+    const name = qs('#customerName').value.trim();
+    if (!name) {
+      showError('Coloque pelo menos o nome para concluir o pedido.');
+      return false;
+    }
+    if (!address) {
+      showError('Preencha o endereço de entrega.');
+      return false;
+    }
+    if (!ref) {
+      showError('Preencha também o ponto de referência.');
+      return false;
+    }
+    return true;
+  }
+
+  function openWhatsApp() {
+    hideError();
+    if (!validate()) return;
+    const text = buildWhatsAppMessage();
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  }
+
+  qsa('[data-group="package"]').forEach(card => {
+    card.addEventListener('click', () => syncPackage(card.dataset.value));
+  });
+
+  qsa('.choice-row[data-single-group="quantity"] .pill').forEach(card => {
+    card.addEventListener('click', () => {
+      syncQuantity(card.dataset.value);
+      hideError();
+    });
+  });
+
+  ['massa', 'molho', 'carne'].forEach(group => {
+    qsa(`.choice-row[data-single-group="${group}"] .pill`).forEach(card => {
       card.addEventListener('click', () => {
-        syncQuantity(card.dataset.value);
+        currentItem()[group] = card.dataset.value;
+        applyItemToForm();
         hideError();
+        updateSummary();
+        renderOrderItems();
       });
     });
+  });
 
-    // Bind singles
-    ['massa', 'molho', 'carne'].forEach(group => {
-      qsa(`.choice-row[data-single-group="${group}"] .pill`).forEach(card => {
-        card.addEventListener('click', () => {
-          state[group] = card.dataset.value;
-          syncPills(group, card.dataset.value);
-          hideError();
-          updateSummary();
-        });
-      });
-    });
-
-
-    qs('#whatsBtn').addEventListener('click', openWhatsApp);
-    qs('#whatsBtnMobile').addEventListener('click', openWhatsApp);
-    qs('#resetBtn').addEventListener('click', () => {
-      state.package = 'A CLÁSSICA — R$ 24,00 (Até 08 ingredientes)';
-      state.quantity = 1;
-      state.massa = 'Penne';
-      state.molho = 'Bolonhesa';
-      state.carne = 'Frango Desfiado';
-      state.ingredients = [];
-      state.bonuses = [];
-      qs('#customerName').value = '';
-      qs('#customerPhone').value = '';
-      qs('#deliveryAddress').value = '';
-      qs('#referencePoint').value = '';
-      qsa('[data-group="package"]').forEach(p => p.classList.toggle('selected', p.dataset.value === state.package));
-      syncQuantity(state.quantity);
-      syncPills('massa', state.massa);
-      syncPills('molho', state.molho);
-      syncPills('carne', state.carne);
-      syncChecklist('ingredientsGrid', []);
-      syncChecklist('bonusGrid', []);
-      qs('#bonusCount').textContent = '0';
-      hideError();
-      updateSummary();
-    });
-
-    // init
-    syncPackage(state.package);
-    syncQuantity(state.quantity);
-    syncPills('massa', state.massa);
-    syncPills('molho', state.molho);
-    syncPills('carne', state.carne);
+  qs('#addItemBtn').addEventListener('click', addItem);
+  qs('#whatsBtn').addEventListener('click', openWhatsApp);
+  qs('#whatsBtnMobile').addEventListener('click', openWhatsApp);
+  qs('#resetBtn').addEventListener('click', () => {
+    state.items = [createDefaultItem()];
+    state.currentIndex = 0;
+    qs('#customerName').value = '';
+    qs('#customerPhone').value = '';
+    qs('#deliveryAddress').value = '';
+    qs('#referencePoint').value = '';
+    applyItemToForm();
+    renderOrderItems();
+    hideError();
     updateSummary();
-  </script>
+  });
+
+  applyItemToForm();
+  renderOrderItems();
+  updateSummary();
+</script>
+
 </body>
 </html>

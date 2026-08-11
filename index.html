@@ -719,7 +719,17 @@
         </section>
 
         <section class="section">
-          <h2>9) 📍 Seus dados de entrega</h2>
+          <h2>9) 🥤 Escolha a bebida</h2>
+          <p class="lead">Opcional. Se quiser, já sai no pedido junto com o macarrão.</p>
+          <div class="choice-row" data-single-group="drink">
+            <div class="pill selected" data-value="Sem bebida"><label><input type="radio" name="drink" checked /><span class="title">Sem bebida</span><span class="desc">não quero bebida</span></label></div>
+            <div class="pill" data-value="Coca Lata"><label><input type="radio" name="drink" /><span class="title">Coca Lata</span><span class="desc">R$ 7,00</span></label></div>
+            <div class="pill" data-value="Guaraná Lata"><label><input type="radio" name="drink" /><span class="title">Guaraná Lata</span><span class="desc">R$ 6,00</span></label></div>
+          </div>
+        </section>
+
+        <section class="section">
+          <h2>10) 📍 Seus dados de entrega</h2>
           <p class="lead">Preencha os dados para entregar sem erro.</p>
           <div class="field-grid">
             <div>
@@ -792,6 +802,7 @@
       carne: 'Frango Desfiado',
       ingredients: [],
       bonuses: [],
+      drink: 'Sem bebida',
     };
   }
 
@@ -815,6 +826,7 @@
       carne: item.carne,
       ingredients: [...item.ingredients],
       bonuses: [...item.bonuses],
+      drink: item.drink,
     };
   }
 
@@ -833,11 +845,17 @@
   }
   function getTotals(item = currentItem()) {
     const unitPrice = getUnitPrice(item);
+    const drinkPriceMap = {
+      'Sem bebida': 0,
+      'Coca Lata': 7,
+      'Guaraná Lata': 6,
+    };
+    const drinkPrice = drinkPriceMap[item.drink] || 0;
     return {
       unitPrice,
-      subtotal: unitPrice,
+      subtotal: unitPrice + drinkPrice,
       discount: 0,
-      total: unitPrice,
+      total: unitPrice + drinkPrice,
     };
   }
 
@@ -870,6 +888,7 @@
     syncPills('massa', item.massa);
     syncPills('molho', item.molho);
     syncPills('carne', item.carne);
+    syncPills('drink', item.drink);
     syncChecklist('ingredientsGrid', item.ingredients);
     syncChecklist('bonusGrid', item.bonuses);
     qs('#ingredientCount').textContent = item.ingredients.length;
@@ -994,6 +1013,7 @@
       items.push(`<li><b>Massa ${idx + 1}:</b> ${item.massa} | <b>Molho:</b> ${item.molho} | <b>Carne:</b> ${item.carne}</li>`);
       items.push(`<li><b>Ingredientes:</b> ${item.ingredients.length ? item.ingredients.join(', ') : 'nenhum selecionado'}</li>`);
       items.push(`<li><b>Bônus grátis:</b> ${item.bonuses.length ? item.bonuses.join(', ') : 'nenhum selecionado'}</li>`);
+      items.push(`<li><b>Bebida:</b> ${item.drink || 'Sem bebida'}</li>`);
     });
     items.push(`<li><b>Total geral:</b> ${money(totalGeral)}</li>`);
 
@@ -1043,6 +1063,7 @@
         `Carne: ${item.carne}`,
         `Ingredientes: ${item.ingredients.length ? item.ingredients.join(', ') : 'nenhum'}`,
         `Bônus grátis: ${item.bonuses.length ? item.bonuses.join(', ') : 'nenhum'}`,
+        `Bebida: ${item.drink || 'Sem bebida'}`,
         ''
       );
     });
@@ -1093,7 +1114,7 @@
     card.addEventListener('click', () => syncPackage(card.dataset.value));
   });
 
-  ['massa', 'molho', 'carne'].forEach(group => {
+  ['massa', 'molho', 'carne', 'drink'].forEach(group => {
     qsa(`.choice-row[data-single-group="${group}"] .pill`).forEach(card => {
       card.addEventListener('click', () => {
         currentItem()[group] = card.dataset.value;

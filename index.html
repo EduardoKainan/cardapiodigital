@@ -640,18 +640,11 @@
           <h2>2) 🍝 Escolha sua versão</h2>
           <p class="lead">Escolha a versão ideal para o item que você está editando.</p>
           <div class="choice-row">
-            <div class="pill selected" data-group="package" data-value="A CLÁSSICA — R$ 24,00 (Até 08 ingredientes)">
+            <div class="pill selected" data-group="package" data-value="MACARRÃO — R$ 30,00 (Até 12 ingredientes)">
               <label>
                 <input type="radio" name="package" checked />
-                <span class="title">A Clássica</span>
-                <span class="desc">R$ 24,00 • até 8 ingredientes</span>
-              </label>
-            </div>
-            <div class="pill" data-group="package" data-value="A COMPLETONA — R$ 27,00 (Até 12 ingredientes)">
-              <label>
-                <input type="radio" name="package" />
-                <span class="title">A Completona</span>
-                <span class="desc">R$ 27,00 • até 12 ingredientes</span>
+                <span class="title">Macarrão completo</span>
+                <span class="desc">R$ 30,00 • até 12 ingredientes</span>
               </label>
             </div>
           </div>
@@ -785,18 +778,16 @@
 <script>
   const WHATSAPP_NUMBER = '5562982042056';
   const packageMap = {
-    'A CLÁSSICA — R$ 24,00 (Até 08 ingredientes)': 8,
-    'A COMPLETONA — R$ 27,00 (Até 12 ingredientes)': 12,
+    'MACARRÃO — R$ 30,00 (Até 12 ingredientes)': 12,
   };
 
   const priceMap = {
-    'A CLÁSSICA — R$ 24,00 (Até 08 ingredientes)': 24,
-    'A COMPLETONA — R$ 27,00 (Até 12 ingredientes)': 27,
+    'MACARRÃO — R$ 30,00 (Até 12 ingredientes)': 30,
   };
 
   function createDefaultItem() {
     return {
-      package: 'A CLÁSSICA — R$ 24,00 (Até 08 ingredientes)',
+      package: 'MACARRÃO — R$ 30,00 (Até 12 ingredientes)',
       massa: 'Penne',
       molho: 'Bolonhesa',
       carne: 'Frango Desfiado',
@@ -939,7 +930,7 @@
     if (!box) return;
     box.innerHTML = state.items.map((item, idx) => {
       const totals = getTotals(item);
-      const pkg = item.package.includes('CLÁSSICA') ? 'A Clássica' : 'A Completona';
+      const pkg = 'Macarrão';
       const active = idx === state.currentIndex ? 'active' : '';
       return `
         <div class="order-item ${active}">
@@ -1008,7 +999,7 @@
     items.push(`<li><b>Itens no pedido:</b> ${state.items.length}</li>`);
     state.items.forEach((item, idx) => {
       const totals = getTotals(item);
-      const pkg = item.package.includes('CLÁSSICA') ? 'A Clássica' : 'A Completona';
+      const pkg = 'Macarrão';
       items.push(`<li><b>Item ${idx + 1}:</b> ${pkg} • ${money(totals.total)}</li>`);
       items.push(`<li><b>Massa ${idx + 1}:</b> ${item.massa} | <b>Molho:</b> ${item.molho} | <b>Carne:</b> ${item.carne}</li>`);
       items.push(`<li><b>Ingredientes:</b> ${item.ingredients.length ? item.ingredients.join(', ') : 'nenhum selecionado'}</li>`);
@@ -1052,7 +1043,7 @@
 
     state.items.forEach((item, idx) => {
       const totals = getTotals(item);
-      const pkg = item.package.includes('CLÁSSICA') ? 'A Clássica' : 'A Completona';
+      const pkg = 'Macarrão';
       lines.push(
         `*Item ${idx + 1}*`,
         `Pacote: ${pkg}`,
